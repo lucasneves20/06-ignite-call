@@ -87,7 +87,7 @@ export default function Register() {
         <label>
           <Text size="sm">Nome Completo</Text>
           <TextInput
-            placeholder="seu-usuario"
+            placeholder="Seu Nome Completo"
             {...inputConfig}
             {...register('name')}
           />
