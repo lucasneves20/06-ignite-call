@@ -3,6 +3,8 @@ import { Container, Header } from '../styles'
 import { ArrowRight } from 'phosphor-react'
 import { ConnectBox, ConnectItem } from './styles'
 
+interface RegisterFormData {}
+
 export default function Register() {
   async function handleRegister(data: RegisterFormData) {}
 
