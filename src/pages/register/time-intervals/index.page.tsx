@@ -1,4 +1,11 @@
-import { Checkbox, Heading, MultiStep, Text, TextInput } from '@ignite-ui/react'
+import {
+  Button,
+  Checkbox,
+  Heading,
+  MultiStep,
+  Text,
+  TextInput,
+} from '@ignite-ui/react'
 import { Container, Header } from '../styles'
 import {
   IntervalBox,
@@ -7,10 +14,38 @@ import {
   IntervalInputs,
   IntervalItem,
 } from './styles'
+import { inputConfig } from '@/utils/TextInputIntialConfig'
+import { ArrowRight } from 'phosphor-react'
+import { z } from 'zod'
+import { useFieldArray, useForm } from 'react-hook-form'
 
-// interface RegisterFormData {}
+const TimeIntervalsFormSchema = z.object({})
 
 export default function TimeIntervals() {
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { isSubmitting, errors },
+  } = useForm({
+    defaultValues: [
+      { weekDay: 0, enabled: false, startTime: '08:00', endTime: '18:00' },
+      { weekDay: 1, enabled: true, startTime: '08:00', endTime: '18:00' },
+      { weekDay: 2, enabled: true, startTime: '08:00', endTime: '18:00' },
+      { weekDay: 3, enabled: true, startTime: '08:00', endTime: '18:00' },
+      { weekDay: 4, enabled: true, startTime: '08:00', endTime: '18:00' },
+      { weekDay: 5, enabled: true, startTime: '08:00', endTime: '18:00' },
+      { weekDay: 6, enabled: false, startTime: '08:00', endTime: '18:00' },
+    ],
+  })
+
+  const { fields } = useFieldArray({
+    control,
+    name: 'intervals',
+  })
+
+  async function handleSetTimeIntervals() {}
+
   return (
     <Container>
       <Header>
@@ -23,7 +58,7 @@ export default function TimeIntervals() {
         <MultiStep size={4} currentStep={3}></MultiStep>
       </Header>
 
-      <IntervalBox>
+      <IntervalBox as="form" onSubmit={handleSubmit(handleSetTimeIntervals)}>
         <IntervalContainer>
           <IntervalItem>
             <IntervalDay>
@@ -31,8 +66,8 @@ export default function TimeIntervals() {
               <Text>Segunda-feira</Text>
             </IntervalDay>
             <IntervalInputs>
-              <TextInput size="sm" type="time" step={60} />
-              <TextInput size="sm" type="time" step={60} />
+              <TextInput size="sm" type="time" step={60} {...inputConfig} />
+              <TextInput size="sm" type="time" step={60} {...inputConfig} />
             </IntervalInputs>
           </IntervalItem>
         </IntervalContainer>
@@ -43,11 +78,16 @@ export default function TimeIntervals() {
               <Text>Terça-feira</Text>
             </IntervalDay>
             <IntervalInputs>
-              <TextInput size="sm" type="time" step={60} />
-              <TextInput size="sm" type="time" step={60} />
+              <TextInput size="sm" type="time" step={60} {...inputConfig} />
+              <TextInput size="sm" type="time" step={60} {...inputConfig} />
             </IntervalInputs>
           </IntervalItem>
         </IntervalContainer>
+
+        <Button type="submit">
+          Próximo Passo
+          <ArrowRight />
+        </Button>
       </IntervalBox>
     </Container>
   )
