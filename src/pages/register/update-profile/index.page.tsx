@@ -18,6 +18,11 @@ import { buildNextAuthOptions } from '@/pages/api/auth/[...nextauth].api'
 import { useSession } from 'next-auth/react'
 import { api } from '@/lib/axios'
 import { useRouter } from 'next/router'
+import { prisma } from '@/lib/prisma'
+
+interface UpdateProfileProps {
+  usernameDatabase: string
+}
 
 const updateProfileFormSchema = z.object({
   bio: z.string(),
@@ -25,7 +30,9 @@ const updateProfileFormSchema = z.object({
 
 type updateProfileFormData = z.infer<typeof updateProfileFormSchema>
 
-export default function UpdateProfile() {
+export default function UpdateProfile({
+  usernameDatabase,
+}: UpdateProfileProps) {
   const {
     register,
     handleSubmit,
@@ -42,7 +49,7 @@ export default function UpdateProfile() {
       bio: data.bio,
     })
 
-    await router.push(`/schedule/${session.data?.user.name}`)
+    await router.push(`/schedule/${usernameDatabase}`)
   }
 
   return (
@@ -90,9 +97,19 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     buildNextAuthOptions(req, res),
   )
 
+  const user = await prisma.user.findFirst({
+    where: {
+      name: session?.user.name,
+    },
+    select: {
+      username: true,
+    },
+  })
+
   return {
     props: {
       session,
+      usernameDatabase: user!.username,
     },
   }
 }
