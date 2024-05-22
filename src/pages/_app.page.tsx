@@ -1,3 +1,4 @@
+import '@/lib/dayjs'
 import { SessionProvider } from 'next-auth/react'
 import { globalStyles } from '@/styles/globals'
 import type { AppProps } from 'next/app'
