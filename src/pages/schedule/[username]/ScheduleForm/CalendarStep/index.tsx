@@ -36,7 +36,7 @@ export function CalendarStep() {
     }
 
     api
-      .get(`/api/user/${username}/availability`, {
+      .get(`/users/${username}/availability`, {
         params: {
           date: dayjs(selectedDate).format('YYYY-MM-DD'),
         },
