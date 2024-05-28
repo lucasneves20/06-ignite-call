@@ -24,6 +24,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { convertTimeStringToMinutes } from '@/utils/convert-times-string-to-minutes'
 import { api } from '@/lib/axios'
 import { useRouter } from 'next/router'
+import { NextSeo } from 'next-seo'
 
 const TimeIntervalsFormSchema = z.object({
   // Declarações de valores a serem validados e transformados
@@ -126,75 +127,79 @@ export default function TimeIntervals() {
   }
 
   return (
-    <Container>
-      <Header>
-        <Heading as="strong">Conecte sua agenda!</Heading>
-        <Text>
-          Conecte o seu calendário para verificar automaticamente as horas
-          ocupadas e os novos eventos à medida em que são agendados.
-        </Text>
+    <>
+      <NextSeo title="Selecione a sua disponibilidade | ignite call" noindex />
 
-        <MultiStep size={4} currentStep={3}></MultiStep>
-      </Header>
+      <Container>
+        <Header>
+          <Heading as="strong">Conecte sua agenda!</Heading>
+          <Text>
+            Conecte o seu calendário para verificar automaticamente as horas
+            ocupadas e os novos eventos à medida em que são agendados.
+          </Text>
 
-      <IntervalBox as="form" onSubmit={handleSubmit(handleSetTimeIntervals)}>
-        <IntervalContainer>
-          {fields.map((field, fieldIndex) => {
-            return (
-              <IntervalItem key={field.id}>
-                <IntervalDay>
-                  {/* Controller é um componente que detém o controle de elementos não nativos do HTML, no caso o Checkbox que é uma dive e não um input */}
-                  <Controller
-                    name={`intervals.${fieldIndex}.enabled`} // Qual campo do formulário vai ser manipulado
-                    control={control} // Config para ele entender qual formulário está sendo manipulado
-                    // render = componente não nativo do HTML padrão a ser manipulado
-                    render={({ field }) => {
-                      return (
-                        <Checkbox
-                          onCheckedChange={(checked) => {
-                            field.onChange(checked === true)
-                          }}
-                          checked={field.value}
-                        />
-                      )
-                    }}
-                  />
+          <MultiStep size={4} currentStep={3}></MultiStep>
+        </Header>
 
-                  <Text>{weekDays[field.weekDay]}</Text>
-                </IntervalDay>
+        <IntervalBox as="form" onSubmit={handleSubmit(handleSetTimeIntervals)}>
+          <IntervalContainer>
+            {fields.map((field, fieldIndex) => {
+              return (
+                <IntervalItem key={field.id}>
+                  <IntervalDay>
+                    {/* Controller é um componente que detém o controle de elementos não nativos do HTML, no caso o Checkbox que é uma dive e não um input */}
+                    <Controller
+                      name={`intervals.${fieldIndex}.enabled`} // Qual campo do formulário vai ser manipulado
+                      control={control} // Config para ele entender qual formulário está sendo manipulado
+                      // render = componente não nativo do HTML padrão a ser manipulado
+                      render={({ field }) => {
+                        return (
+                          <Checkbox
+                            onCheckedChange={(checked) => {
+                              field.onChange(checked === true)
+                            }}
+                            checked={field.value}
+                          />
+                        )
+                      }}
+                    />
 
-                <IntervalInputs>
-                  <TextInput
-                    size="sm"
-                    type="time"
-                    step={60}
-                    disabled={intervals[fieldIndex].enabled === false}
-                    {...inputConfig}
-                    {...register(`intervals.${fieldIndex}.startTime`)}
-                  />
-                  <TextInput
-                    size="sm"
-                    type="time"
-                    step={60}
-                    disabled={intervals[fieldIndex].enabled === false}
-                    {...inputConfig}
-                    {...register(`intervals.${fieldIndex}.endTime`)}
-                  />
-                </IntervalInputs>
-              </IntervalItem>
-            )
-          })}
-        </IntervalContainer>
+                    <Text>{weekDays[field.weekDay]}</Text>
+                  </IntervalDay>
 
-        {errors?.intervals?.root && (
-          <FormError size="sm">{errors.intervals.root.message}</FormError>
-        )}
+                  <IntervalInputs>
+                    <TextInput
+                      size="sm"
+                      type="time"
+                      step={60}
+                      disabled={intervals[fieldIndex].enabled === false}
+                      {...inputConfig}
+                      {...register(`intervals.${fieldIndex}.startTime`)}
+                    />
+                    <TextInput
+                      size="sm"
+                      type="time"
+                      step={60}
+                      disabled={intervals[fieldIndex].enabled === false}
+                      {...inputConfig}
+                      {...register(`intervals.${fieldIndex}.endTime`)}
+                    />
+                  </IntervalInputs>
+                </IntervalItem>
+              )
+            })}
+          </IntervalContainer>
 
-        <Button type="submit" disabled={isSubmitting}>
-          Próximo Passo
-          <ArrowRight />
-        </Button>
-      </IntervalBox>
-    </Container>
+          {errors?.intervals?.root && (
+            <FormError size="sm">{errors.intervals.root.message}</FormError>
+          )}
+
+          <Button type="submit" disabled={isSubmitting}>
+            Próximo Passo
+            <ArrowRight />
+          </Button>
+        </IntervalBox>
+      </Container>
+    </>
   )
 }

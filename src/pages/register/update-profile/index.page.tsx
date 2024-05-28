@@ -19,6 +19,7 @@ import { useSession } from 'next-auth/react'
 import { api } from '@/lib/axios'
 import { useRouter } from 'next/router'
 import { prisma } from '@/lib/prisma'
+import { NextSeo } from 'next-seo'
 
 interface UpdateProfileProps {
   usernameDatabase: string
@@ -53,40 +54,44 @@ export default function UpdateProfile({
   }
 
   return (
-    <Container>
-      <Header>
-        <Heading as="strong">Bem-vindo ao Ignite Call!</Heading>
-        <Text>
-          Precisamos de algumas informações para criar seu perfil! Ah, você pode
-          editar essas informações depois.
-        </Text>
+    <>
+      <NextSeo title="Atualize o seu Perfil | Ignite Call" noindex />
 
-        <MultiStep size={4} currentStep={4}></MultiStep>
-      </Header>
+      <Container>
+        <Header>
+          <Heading as="strong">Bem-vindo ao Ignite Call!</Heading>
+          <Text>
+            Precisamos de algumas informações para criar seu perfil! Ah, você
+            pode editar essas informações depois.
+          </Text>
 
-      <ProfileBox as="form" onSubmit={handleSubmit(updateProfileHandler)}>
-        <label>
-          <Text size="sm">Foto de Perfil</Text>
-          <Avatar
-            src={session.data?.user.avatar}
-            alt={session.data?.user.name}
-          />
-        </label>
+          <MultiStep size={4} currentStep={4}></MultiStep>
+        </Header>
 
-        <label>
-          <Text size="sm">Sobre Você</Text>
-          <TextArea {...inputConfig} {...register('bio')} />
-          <FormAnnotation>
-            Fale um pouco sobre você. Isto será exibido em sua própria página
-            pessoal.
-          </FormAnnotation>
-        </label>
+        <ProfileBox as="form" onSubmit={handleSubmit(updateProfileHandler)}>
+          <label>
+            <Text size="sm">Foto de Perfil</Text>
+            <Avatar
+              src={session.data?.user.avatar}
+              alt={session.data?.user.name}
+            />
+          </label>
 
-        <Button type="submit" disabled={isSubmitting}>
-          Finalizar
-        </Button>
-      </ProfileBox>
-    </Container>
+          <label>
+            <Text size="sm">Sobre Você</Text>
+            <TextArea {...inputConfig} {...register('bio')} />
+            <FormAnnotation>
+              Fale um pouco sobre você. Isto será exibido em sua própria página
+              pessoal.
+            </FormAnnotation>
+          </label>
+
+          <Button type="submit" disabled={isSubmitting}>
+            Finalizar
+          </Button>
+        </ProfileBox>
+      </Container>
+    </>
   )
 }
 
